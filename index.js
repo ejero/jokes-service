@@ -36,5 +36,23 @@ app.get('/jokes', async (req, res, next) => {
   }
 });
 
+
+
+app.delete('/jokes:id', async (req, res, next) => {
+  try {
+    const jokeId = req.params.id;
+    const joke = await Joke.findByPk(jokeId);
+    if(!joke){
+      res.status(404).send('Joke not found');
+    } else {
+      await joke.destroy();
+      res.send('Joke deleted');
+    }
+  } catch (error) {
+    console.error(error);
+    next(error)
+  }
+});
+
 // we export the app, not listening in here, so that we can run tests
 module.exports = app;

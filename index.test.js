@@ -31,3 +31,20 @@ describe('GET /jokes', () => {
         expect(response.body[0]).toEqual(expect.objectContaining(seedData[2]));
     });
 });
+
+describe('DELETE /jokes:id', () => {
+    afterAll(async () => {
+        await sequelize.sync({ force: true }); // recreate db
+        await seed();
+    });
+
+    it('should delete joke with ID', async () => {
+        const response = await request(app).delete('/jokes/${id}');
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveLength(seedData.length);
+        expect(response.body[0]).toEqual(expect.objectContaining(seedData[0]));
+        const deletedJoke = await Joke.findByPk(id);
+        expect(deletedJoke).toBe();
+    });
+
+});
